@@ -7,19 +7,17 @@ source_path_1="/storage/backup-wl/delta"
 delta_backup_path="/home/user/delta_backup"
 to_transfer_path="/home/user/to_transfer"
 
-# move files to delta_backup folder
+# move files to delta_backup folder and to_transfer folder
 move_files() {
   mkdir -p "$delta_backup_path" || { echo "Failed to create delta_backup folder"; exit 1; }
+  mkdir -p "$to_transfer_path" || { echo "Failed to create to_transfer folder"; exit 1; }
   cp "$source_path_1/"/* "$delta_backup_path"
   rsync -av --remove-source-files --exclude='*/' "$source_path_1/" "$to_transfer_path" || { echo "Failed to move files to to_transfer folder"; exit 1; }
 }
 
 # create md5 checksums in to_transfer folder
 create_checksums() {
-  mkdir -p "$to_transfer_path" || { echo "Failed to create to_transfer folder"; exit 1; }
-  
   cd "$to_transfer_path" || { echo "Failed to change directory to to_transfer folder"; exit 1; }
-
   for file_path in "$to_transfer_path"/*.zip; do
     md5sum=$(md5sum "$file_path" | awk '{print $1}')
     md5_file_path="${file_path}.md5"
@@ -43,7 +41,7 @@ delete_old_files
 destination_ip="10.1.24.90"
 destination_path="/tmp/to_transfer"
 remote_destination_path="/storage/backup-wl/delta_remote"
-log_path="/var/log/md5failures.log"
+log_path="/var/log/delta_sync.log"
 
 # create remote directory
 create_remote_directory() {
