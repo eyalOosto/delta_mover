@@ -28,7 +28,7 @@ for file in "$src_dir"/*.zip; do
 
   else
 
-    # The file has not changed, input logs
+    # The file has changed, input logs
     echo "File $file MD5 check not passed" >> "$log_file"
 
   fi
